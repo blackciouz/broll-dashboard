@@ -221,7 +221,7 @@ function viewFiles(name) {
       const src = hasThumb ? `/api/v1/banks/${name}/files/${thumbNom}/raw?session=${TOKEN}` : null;
       return `<div class="tile ${state.sel.has(f.nom) ? 'selected' : ''}" data-n="${esc(f.nom)}">
         <input type="checkbox" class="sel" ${state.sel.has(f.nom) ? 'checked' : ''}>
-        ${src ? `<img loading="lazy" src="${src}" onerror="this.outerHTML='<div class=\\'ph\\'>${ICONS.film}</div>'">` : `<div class="ph">${ICONS.film}</div>`}
+        ${src ? `<img src="${src}" onerror="this.outerHTML='<div class=\\'ph\\'>${ICONS.film}</div>'">` : `<div class="ph">${ICONS.film}</div>`}
         ${f.dur_s ? `<span class="dur">${fmtDur(f.dur_s)}</span>` : ''}
         <div class="lbl" title="${esc(f.desc)}">${esc(f.desc || f.nom)}</div>
       </div>`;

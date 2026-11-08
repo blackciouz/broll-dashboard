@@ -50,6 +50,7 @@ function sessionValid(req, url) {
   return true;
 }
 function proxy(req, res, urlPath, query) {
+  if (process.env.DEBUG_PROXY === '1' && urlPath.includes('/raw')) console.log('PROXY', req.method, urlPath, req.headers.range || '');
   const target = API_BASE + urlPath + (query || '');
   const headers = { 'X-API-Key': API_KEY };
   if (req.headers.range) headers['Range'] = req.headers.range;
@@ -119,7 +120,6 @@ async function zipHandler(req, res, query) {
     central.push({ name, crc: (crc.c ^ 0xFFFFFFFF) >>> 0, size: crc.size, offset: localOffset });
   }
   let cdSize = 0;
-  console.log('ZIP central:', JSON.stringify(central));
   const cdBufs = central.map((c) => {
     const h = Buffer.alloc(46 + Buffer.byteLength(c.name));
     h.writeUInt32LE(0x02014b50, 0); h.writeUInt16LE(20, 4); h.writeUInt16LE(20, 6);
