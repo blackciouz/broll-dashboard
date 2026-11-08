@@ -128,6 +128,7 @@ async function viewBanks() {
   };
   document.getElementById('f-q').oninput = draw;
   document.getElementById('f-keep').onchange = draw;
+  document.getElementById('f-libs').onchange = draw;
   draw();
   document.getElementById('new-bank').onclick = () => modalNewBank();
 }
