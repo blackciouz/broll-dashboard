@@ -100,7 +100,8 @@ async function viewBanks() {
       <button class="primary" id="new-bank">+ Nouvelle banque</button>
     </div>
     <div class="toolbar"><input id="f-q" placeholder="Filtrer par nom / description…" style="flex:1;max-width:420px">
-      <select id="f-keep"><option value="">keep : tous</option><option value="1">permanentes</option><option value="0">temporaires</option></select></div>
+      <select id="f-keep"><option value="">keep : tous</option><option value="1">permanentes</option><option value="0">temporaires</option></select>
+      <label class="small muted"><input type="checkbox" id="f-libs"> Afficher les bibliothèques lib-*</label></div>
     <div class="card-grid" id="grid"></div>
     <div class="empty" id="empty" style="display:none">Aucune banque.</div>
   </div>`;
@@ -109,7 +110,8 @@ async function viewBanks() {
   const draw = () => {
     const q = document.getElementById('f-q').value.toLowerCase();
     const kp = document.getElementById('f-keep').value;
-    const list = banks.filter((b) => (!q || (b.name + ' ' + b.desc).toLowerCase().includes(q)) && (kp === '' || String(b.keep ? 1 : 0) === kp));
+    const showLibs = document.getElementById('f-libs').checked;
+    const list = banks.filter((b) => (showLibs || !b.name.startsWith('lib-')) && (!q || (b.name + ' ' + b.desc).toLowerCase().includes(q)) && (kp === '' || String(b.keep ? 1 : 0) === kp));
     document.getElementById('grid').innerHTML = list.map((b) => {
       const isLib = b.name.startsWith('lib-');
       const exp = b.expires_at ? new Date(b.expires_at) : null;
@@ -221,7 +223,8 @@ function viewFiles(name) {
       const src = hasThumb ? `/api/v1/banks/${name}/files/${thumbNom}/raw?session=${TOKEN}` : null;
       return `<div class="tile ${state.sel.has(f.nom) ? 'selected' : ''}" data-n="${esc(f.nom)}">
         <input type="checkbox" class="sel" ${state.sel.has(f.nom) ? 'checked' : ''}>
-        ${src ? `<img src="${src}" onerror="this.outerHTML='<div class=\\'ph\\'>${ICONS.film}</div>'">` : `<div class="ph">${ICONS.film}</div>`}
+        <div class="ph">${ICONS.film}</div>
+        ${src ? `<img src="${src}" onerror="this.remove()">` : ''}
         ${f.dur_s ? `<span class="dur">${fmtDur(f.dur_s)}</span>` : ''}
         <div class="lbl" title="${esc(f.desc)}">${esc(f.desc || f.nom)}</div>
       </div>`;
